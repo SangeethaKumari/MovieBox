@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_padding">16dp</dimen>
+    <dimen name="cardView_height">160dp</dimen>
+    <dimen name="cardView_layout_margin">4dp</dimen>
+    <dimen name="cardView_width">120dp</dimen>
+    <dimen name="cardView_radius">8dp</dimen>
+    <dimen name="cardView_elevation">8dp</dimen>
+    <dimen name="imageview_height">120dp</dimen>
+    <dimen name="movie_title_size">16sp</dimen>
+
+    <dimen name="margin_general">16dp</dimen>
+    <dimen name="heading_textSize">20sp</dimen>
+
+
+    <!--Dimensions for activity_movie xml file -->
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="details_image_width">200dp</dimen>
+
+    <dimen name="textview_layout_width">240dp</dimen>
+    <dimen name="details_textsize">16sp</dimen>
+
+</resources>
