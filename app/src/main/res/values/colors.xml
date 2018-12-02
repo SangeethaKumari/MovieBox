@@ -4,7 +4,10 @@
     <color name="colorPrimaryDark">#303030</color>
     <color name="colorAccent">#de3163</color>
 
-    <color name="colorDetails">#f4bf7c</color>
+    <color name="favoriteColor">#f4bf7c</color>
+
+    <color name="trailerColor">#0746ff</color>
+
     <color name="selectTextColor">#ffffff</color>
 
 </resources>

@@ -14,15 +14,23 @@ public class Movie {
     private  String plotSynopsis;
     private String category;
     private int imageId;
+    private String movieId;
+
+    private String[] movieTrailerIds;
+    private String[] movieReviews;
+
+    public Movie() {
+    }
 
     public Movie(String title, String releaseDate, String posterPath,
-                 String backDropPath, String averageVoting, String plotSynopsis) {
+                 String backDropPath, String averageVoting, String plotSynopsis, String movieId) {
         this.title = title;
         this.releaseDate = releaseDate;
         this.posterPath = posterPath;
         this.backDropPath = backDropPath;
         this.averageVoting = averageVoting;
         this.plotSynopsis = plotSynopsis;
+        this.movieId = movieId;
     }
 
     public String getPosterPath() {
@@ -87,6 +95,30 @@ public class Movie {
 
     public void setAverageVoting(String averageVoting) {
         this.averageVoting = averageVoting;
+    }
+
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
+    }
+
+    public String[] getMovieTrailerIds() {
+        return movieTrailerIds;
+    }
+
+    public void setMovieTrailerIds(String[] movieTrailerIds) {
+        this.movieTrailerIds = movieTrailerIds;
+    }
+
+    public String[] getMovieReviews() {
+        return movieReviews;
+    }
+
+    public void setMovieReviews(String[] movieReviews) {
+        this.movieReviews = movieReviews;
     }
 
 }

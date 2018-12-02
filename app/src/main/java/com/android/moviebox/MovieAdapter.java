@@ -53,6 +53,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         final String moviePosterPath = mContext.getString(R.string.movie_poster);
         final String releaseDate = mContext.getString(R.string.movie_release_date);
         final String plotSynopsis = mContext.getString(R.string.movie_plot_synopsis);
+        final String movieId = mContext.getString(R.string.movie_id);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +66,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
                 intent.putExtra(averageVoting,movieList.get(position).getAverageVoting());
                 intent.putExtra(releaseDate,movieList.get(position).getReleaseDate());
                 intent.putExtra(plotSynopsis,movieList.get(position).getPlotSynopsis());
+                intent.putExtra(movieId,movieList.get(position).getMovieId());
+
                 // start the activity
                 mContext.startActivity(intent);
             }

@@ -24,9 +24,11 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
 
     MovieAdapter movieAdapter ;
     public static final int MOVIES_LOADER_ID = 1;
+    public static final int FETCH_MOVIES_DETAILS = 1;
+
 
     /** URL for NEWs data from the USGS dataset */
-    private static final String URL_BASE = "http://api.themoviedb.org/3/discover/movie";
+    private static final String URL_BASE = "http://api.themoviedb.org/3/movie";
     // API_KEY to access MovieDb  API's
     private static final String API_KEY = BuildConfig.MovieBoxApiKeyHolder;
     TextView mEmptyStateTextView = null;
@@ -87,12 +89,10 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
                 getString(R.string.settings_order_by_key),
                 getString(R.string.settings_order_by_default));
 
+        uriBuilder.appendPath(orderBy);
         // Append query parameter and its value. For example, the section=games
         uriBuilder.appendQueryParameter("api_key",API_KEY);
-        uriBuilder.appendQueryParameter("sort_by", orderBy);
-
-        // uriBuilder.appendQueryParameter("top_rated", "top_rated");
-        return new MoviesLoader(this,uriBuilder.toString());
+        return new MoviesLoader(this,uriBuilder.toString(),FETCH_MOVIES_DETAILS);
     }
 
     @Override

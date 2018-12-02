@@ -11,10 +11,12 @@ import java.util.List;
 
 public class MoviesLoader extends AsyncTaskLoader<List<Movie>> {
     private String mUrl;
+    private int mRequetType;
 
-    public MoviesLoader(Context context, String url){
+    public MoviesLoader(Context context, String url,int requestType){
         super(context);
         this.mUrl = url;
+        this.mRequetType = requestType;
     }
 
     @Override
@@ -24,11 +26,20 @@ public class MoviesLoader extends AsyncTaskLoader<List<Movie>> {
 
     @Override
     public List<Movie> loadInBackground() {
+        List<Movie> moviesList = null;
         if (mUrl == null) {
             return null;
         }
-        // Perform the network request, parse the response, and extract a list of movies.
-        List<Movie> newsList = QueryUtils.fetchMovieData(mUrl);
-        return newsList;
+        if(mRequetType == 1) {
+            // Perform the network request, parse the response, and extract a list of movies details.
+            moviesList = QueryUtils.fetchMovieData(mUrl);
+        } else if (mRequetType == 2){
+            // Perform the network request, parse the response, and extract a list of movie trailers.
+            moviesList = QueryUtils.fetchMovieTrailer(mUrl);
+        }else if (mRequetType == 3){
+            // Perform the network request, parse the response, and extract a list of movie reviews.
+            moviesList = QueryUtils.fetchMovieReview(mUrl);
+        }
+        return moviesList;
     }
 }

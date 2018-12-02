@@ -59,6 +59,139 @@ public class QueryUtils {
         return moviesList;
     }
 
+
+    public static List<Movie> fetchMovieTrailer(String requestUrl) {
+        // Create URL object
+        URL url = createUrl(requestUrl);
+
+        // Perform HTTP request to the URL and receive a JSON response back
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+        }
+        //Extract relevant fields from the JSON response and create a list of {@link Movie}s
+        List<Movie> moviesList = extractMovieTrailers(jsonResponse);
+
+        // Return the list of movies
+        return moviesList;
+    }
+
+    private static List<Movie> extractMovieTrailers(String jsonResponse) {
+
+        // If the JSON string is empty or null, then return early.
+        if (TextUtils.isEmpty(jsonResponse)) {
+            return null;
+        }
+        // Create an empty ArrayList that we can start adding movie to the moviesList
+        List<Movie> moviesList = new ArrayList<>();
+
+
+        // Try to parse the JSON response string. If there's a problem with the way the JSON
+        // is formatted, a JSONException exception object will be thrown.
+        // Catch the exception so the app doesn't crash, and print the error message to the logs.
+        try {
+            // Create a JSONObject from the JSON response string
+            JSONObject baseJsonResponse = new JSONObject(jsonResponse);
+
+            // Extract the JSONArray associated with the key called "results",
+            // which represents a list of movies
+            JSONArray trailersArray = baseJsonResponse.getJSONArray("results");
+            int trailer_count = trailersArray.length();
+            String[] movieTrailerIds = new String[trailer_count];
+
+            // For each trailer in the moviesArray, populate movieTrailerId Array
+            for (int i = 0; i < trailer_count ; i++) {
+                // Get a single movie at position i within the list of movies
+                JSONObject currentMovie = trailersArray.getJSONObject(i);
+
+                // Extract the value for the key called "movie title"
+                String trailerKey = currentMovie.getString("key");
+                movieTrailerIds[i] = trailerKey;
+            }
+            Movie movie = new Movie();
+            movie.setMovieTrailerIds(movieTrailerIds);
+            moviesList.add(movie);
+        } catch (JSONException e) {
+            // If an error is thrown when executing any of the above statements in the "try" block,
+            // catch the exception here, so the app doesn't crash. Print a log message
+            // with the message from the exception.
+            Log.e("QueryUtils", "Problem parsing the movie trailer JSON results", e);
+        }
+        // Return the list of movie list with trailer keys
+        return moviesList;
+    }
+
+    public static List<Movie> fetchMovieReview(String requestUrl) {
+
+        // Create URL object
+        URL url = createUrl(requestUrl);
+
+        // Perform HTTP request to the URL and receive a JSON response back
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+        }
+        //Extract relevant fields from the JSON response and create a list of {@link Movie}s
+        List<Movie> moviesList = extractMovieReviews(jsonResponse);
+
+        // Return the list of movies
+        return moviesList;
+    }
+
+    private static List<Movie> extractMovieReviews(String jsonResponse) {
+
+        // If the JSON string is empty or null, then return early.
+        if (TextUtils.isEmpty(jsonResponse)) {
+            return null;
+        }
+        // Create an empty ArrayList that we can start adding movie to the moviesList
+        List<Movie> moviesList = new ArrayList<>();
+
+
+        // Try to parse the JSON response string. If there's a problem with the way the JSON
+        // is formatted, a JSONException exception object will be thrown.
+        // Catch the exception so the app doesn't crash, and print the error message to the logs.
+        try {
+            // Create a JSONObject from the JSON response string
+            JSONObject baseJsonResponse = new JSONObject(jsonResponse);
+
+            // Extract the JSONArray associated with the key called "results",
+            // which represents a list of movies
+            JSONArray trailersArray = baseJsonResponse.getJSONArray("results");
+            int review_count = trailersArray.length();
+            if(review_count != 0) {
+                String[] movieReviews = new String[review_count];
+
+                // For each movie in the moviesArray, create an {@link Movie} object
+                for (int i = 0; i < review_count; i++) {
+                    // Get a single review at position i within the list of reviews
+                    JSONObject currentMovie = trailersArray.getJSONObject(i);
+
+                    // Extract the value for the key called "movie title"
+                    String reviewContent = currentMovie.getString("content");
+                    movieReviews[i] = reviewContent;
+
+                }
+                Movie movie = new Movie();
+                movie.setMovieReviews(movieReviews);
+                moviesList.add(movie);
+            }
+        } catch (JSONException e) {
+            // If an error is thrown when executing any of the above statements in the "try" block,
+            // catch the exception here, so the app doesn't crash. Print a log message
+            // with the message from the exception.
+            Log.e("QueryUtils", "Problem parsing the movie review JSON results", e);
+        }
+        // Return the list of movie list with review content
+        return moviesList;
+    }
+
+
+
     /**
      * Returns new URL object from the given string URL.
      */
@@ -167,6 +300,11 @@ public class QueryUtils {
                 // Extract the value for the key called "movie title"
                 String movieTitle = currentMovie.getString("title");
                 movieTitle = isValueEmpty(movieTitle);
+
+                // Extract the value for the key called "movie Id"
+                String movieId = currentMovie.getString("id");
+                movieId = isValueEmpty(movieId);
+
                 // Extract the value for the key called "overview"
                 String movieOverview = currentMovie.getString("overview");
                 movieOverview = isValueEmpty(movieOverview);
@@ -188,7 +326,7 @@ public class QueryUtils {
 
                 // Create a new {@link Movie} object with the magnitude, location, time,
                 // and url from the JSON response.
-                Movie movies = new Movie(movieTitle,formattedDate,posterPath, backdropPath, averageVote,movieOverview);
+                Movie movies = new Movie(movieTitle,formattedDate,posterPath, backdropPath, averageVote,movieOverview,movieId);
                 // Add the new {@link Movie} to the list of movies.
                 moviesList.add(movies);
             }
@@ -240,5 +378,6 @@ public class QueryUtils {
         return formattedDate;
 
     }
-    
+
+
 }
