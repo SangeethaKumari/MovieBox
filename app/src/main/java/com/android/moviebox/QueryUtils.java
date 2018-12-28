@@ -209,6 +209,8 @@ public class QueryUtils {
      * Make an HTTP request to the given URL and return a String as the response.
      */
     private static String makeHttpRequest(URL url) throws IOException {
+        Log.i("QueryUtils", "fetchMovieData: +requestUrl " +url.toString());
+
         String jsonResponse = "";
 
         // If the URL is null, then return early.
@@ -236,6 +238,7 @@ public class QueryUtils {
                         + urlConnection.getResponseCode());
             }
         } catch (Exception e) {
+            e.printStackTrace();
             Log.e(LOG_TAG, "Problem retrieving the movies JSON results.", e);
         } finally {
             if (urlConnection != null) {
@@ -378,6 +381,7 @@ public class QueryUtils {
         return formattedDate;
 
     }
+
 
 
 }

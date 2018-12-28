@@ -1,5 +1,6 @@
 package com.android.moviebox;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -15,6 +16,14 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
     }
+
+    @Override
+    public void onBackPressed() {
+        //reload the main activity on click of back button(back key event) of the device.
+        Intent mainActivity = new Intent(this, MainActivity.class);
+        startActivity(mainActivity);
+    }
+
     public static class MovieDisplayPreferenceFragment extends PreferenceFragment
             implements Preference.OnPreferenceChangeListener  {
 

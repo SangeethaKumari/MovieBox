@@ -9,7 +9,8 @@
     <string name="movie_poster">Movie Poster</string>
     <string name="movie_plot_synopsis">Plot Synopsis</string>
     <string name="movie_id">Movie Id</string>
-
+    <string name="favorite_movie">Favorite Movie</string>
+    <string name="favorite_movie_color">#228B22</string>
     <string name="movie_favorite">Add Favorite</string>
     <string name="movie_play_trailer">Trailers</string>
     <string name="movie_reviews">Reviews</string>
@@ -38,5 +39,22 @@
     <!-- Label for order-by most top rated option [CHAR LIMIT=20] -->
     <string name="settings_order_by_top_rated_label">Top Rated</string>
     <string name="settings_order_by_top_rated_value" translatable="false">top_rated</string>
+
+    <!-- Label for order-by favorite movies [CHAR LIMIT=20] -->
+    <string name="settings_order_by_favorite_label" translatable="false">Favorite Movies</string>
+    <string name="settings_order_by_favorite_value" translatable="false">favorite</string>
+
+
+    <!-- Strings used while adding a movie as favorite   -->
+    <!-- Toast message in editor when current movie was successfully added as favorite [CHAR LIMIT=NONE] -->
+    <string name="add_movie_favorite_successful">Movie added as favorite.</string>
+
+    <!-- Toast message in editor when current  movie was failed to be added as favorite[CHAR LIMIT=NONE] -->
+    <string name="add_movie_favorite_failed">Error while adding movie as favorite..</string>
+
+
+    <string name="ummarked_as_favorite_failed">Error while unmarking movie as favorite..</string>
+    <string name="ummarked_as_favorite_successful"> Unmarked movie as favorite successfully..</string>
+
 
 </resources>

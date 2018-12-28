@@ -1,6 +1,8 @@
 package com.android.moviebox;
 
 import android.app.LoaderManager;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
@@ -10,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.moviebox.viewmodel.MovieViewModel;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<List<Movie>> {
@@ -25,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
     MovieAdapter movieAdapter ;
     public static final int MOVIES_LOADER_ID = 1;
     public static final int FETCH_MOVIES_DETAILS = 1;
+    public static final int FETCH_FAVORITE_MOVIES_DETAILS = 4;
+
 
 
     /** URL for NEWs data from the USGS dataset */
@@ -33,15 +40,29 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
     private static final String API_KEY = BuildConfig.MovieBoxApiKeyHolder;
     TextView mEmptyStateTextView = null;
 
+    private MovieViewModel movieViewModel;
+    String orderBy;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+
+       /* movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+
+        movieViewModel.getMovie().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable final List<Movie> movies) {
+                // Update the cached copy of the words in the adapter.
+                adapter.setWords(words);
+            }
+        });*/
 
         NetworkInfo networkInfo = getActiveNetworkInfo();
         if( networkInfo != null && networkInfo.isConnected()){
+
             // Get a reference to the LoaderManager, in order to interact with loaders.
             LoaderManager loaderManager = getLoaderManager();
 
@@ -49,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
             loaderManager.initLoader(MOVIES_LOADER_ID, null, this);
-
         } else {
             // Set empty state text to display "No internet connection."
             mEmptyStateTextView.setText(R.string.no_internet_connection);
@@ -85,13 +105,16 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
-        String orderBy  = sharedPrefs.getString(
+        orderBy  = sharedPrefs.getString(
                 getString(R.string.settings_order_by_key),
                 getString(R.string.settings_order_by_default));
 
         uriBuilder.appendPath(orderBy);
         // Append query parameter and its value. For example, the section=games
         uriBuilder.appendQueryParameter("api_key",API_KEY);
+        if(orderBy.equalsIgnoreCase("favorite")){
+            return new MoviesLoader(this,uriBuilder.toString(),FETCH_FAVORITE_MOVIES_DETAILS);
+        }
         return new MoviesLoader(this,uriBuilder.toString(),FETCH_MOVIES_DETAILS);
     }
 
@@ -103,11 +126,19 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
         loadingIndicator.setVisibility(View.GONE);
 
         if(movies != null) {
-            movieAdapter = new MovieAdapter(this, movies);
-            //set the adapter value
-            RecyclerView myrv = (RecyclerView) findViewById(R.id.rv_movie);
-            myrv.setLayoutManager(new GridLayoutManager(this, 3));
-            myrv.setAdapter(movieAdapter);
+           try {
+               movieAdapter = new MovieAdapter(this, movies);
+               //set the adapter value
+               RecyclerView myrv = (RecyclerView) findViewById(R.id.rv_movie);
+               myrv.setLayoutManager(new GridLayoutManager(this, 3));
+               myrv.setAdapter(movieAdapter);
+
+               if(orderBy.equalsIgnoreCase("favorite")) {
+                    setupMovieViewModel();
+               }
+           }catch (Exception e){
+               e.printStackTrace();
+           }
         }else{
             // Set empty state text to display "No Movie data found."
             mEmptyStateTextView.setText(R.string.detail_error_message);
@@ -137,5 +168,15 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setupMovieViewModel() {
+        MovieViewModel viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        viewModel.getMovie().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> favoriteMovies) {
+                movieAdapter.setFavoriteMovies(favoriteMovies);
+            }
+        });
     }
 }

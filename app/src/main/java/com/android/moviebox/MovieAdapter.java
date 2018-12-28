@@ -27,6 +27,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     private Context mContext;
     private List<Movie> movieList;
+    private String isFavouriteMovie = "0";
 
     public MovieAdapter(Context context, List<Movie> movieList) {
         this.mContext = context;
@@ -39,6 +40,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.cardview_item_movie,parent,false);
         return new MovieHolder(view);
+    }
+
+    /**
+     * When  favorite movie data changes, this method updates the list of movies
+     * and notifies the adapter to use the new values added
+     */
+    public void setFavoriteMovies(List<Movie> movies) {
+        movieList = movies;
+        isFavouriteMovie = "1";
+        notifyDataSetChanged();
     }
 
     @Override
@@ -54,6 +65,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         final String releaseDate = mContext.getString(R.string.movie_release_date);
         final String plotSynopsis = mContext.getString(R.string.movie_plot_synopsis);
         final String movieId = mContext.getString(R.string.movie_id);
+        final String isFavorite = mContext.getString(R.string.favorite_movie);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,11 +74,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
                 Intent intent = new Intent(mContext,MovieActivity.class);
                 // passing data to the movie activity
                 intent.putExtra(movieTitle,movieList.get(position).getTitle());
-                intent.putExtra(moviePosterPath,IMAGE_FINAL_URL);
+                intent.putExtra(moviePosterPath,movieList.get(position).getPosterPath());
                 intent.putExtra(averageVoting,movieList.get(position).getAverageVoting());
                 intent.putExtra(releaseDate,movieList.get(position).getReleaseDate());
                 intent.putExtra(plotSynopsis,movieList.get(position).getPlotSynopsis());
                 intent.putExtra(movieId,movieList.get(position).getMovieId());
+                intent.putExtra(isFavorite,isFavouriteMovie);
 
                 // start the activity
                 mContext.startActivity(intent);
